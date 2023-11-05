@@ -28,6 +28,7 @@ public class Question6Test {
     Exception exception = assertThrows(NotEnoughMoneyException.class, () -> {
       vm.pressButton("ScottCola");
     });
+    
   }
 
   @Test

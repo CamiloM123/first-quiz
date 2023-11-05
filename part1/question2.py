@@ -17,5 +17,33 @@
 
 swapper = None
 
-def run_swapper(list_of_tuples):
+def swapper(tuple_item : tuple) -> tuple:
+  """
+  Swaps the items in a tuple.  
+
+  Args:
+    tuple_item (tuple): A tuple of two items.
+
+  Returns:
+    tuple: A tuple of two items. The items are swapped.
+  """
+  #Time Complexity: O(n)
+  #Auxiliary Space: O(n)
+  list_item = list(tuple_item)
+  list_item.reverse()   
+  
+  return tuple(list_item)
+  
+
+def run_swapper(list_of_tuples : list) -> list:
+  """
+  Runs the swapper function on a list of tuples. 
+
+  Args:
+    list_of_tuples (list): A list of tuples.
+
+  Returns:
+    list: A list of tuples. Each tuple has two items.
+  """
   return list(map(swapper, list_of_tuples))
+

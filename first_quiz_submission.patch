@@ -1,0 +1,633 @@
+diff --git a/part1/question1.py b/part1/question1.py
+index 5c99fdb..15bb46d 100644
+--- a/part1/question1.py
++++ b/part1/question1.py
+@@ -13,23 +13,54 @@
+ # need to be fixed. The test suite in `question1_test.py` will verify the output.
+ # Read the test suite to know the values that these functions should return.
+ 
+-def get_city_temperature(city):
+-   if city == "Quito":
+-      return 22
+-   if city == "Sao Paulo":
+-      return 17
+-   if city == "San Francisco":
+-      return 16
++def get_city_temperature(city : str ) -> int :
++   """
++   Returns the temperature for a given city.
+ 
+-def get_city_weather(city):
++   Args: 
++      city (str): The city name.
++      
++   Returns:
++      int: The temperature in degrees Celsius.
++   
++   Raises:
++      KeyError: If the city is not in the dictionary.
++   """
+ 
+-  sky_condition = None
++   city_temperatures = {
++      "Quito": 22,
++      "Sao Paulo": 17,
++      "San Francisco": 16,
++      "New York": 14
++   }
+ 
+-  if city == "Sao Paulo":
+-     sky_condition = "cloudy"
+-  elif city == "New York":
+-     sky_condition = "rainy"
++   temperature = city_temperatures[city]
++   
++   return temperature
+ 
+-  temperature = get_city_temperature(city)
++def get_city_weather(city : str ) -> str :
++   """
++   Returns the weather for a given city.
+ 
+-  return str(temperature) + " degrees and " + sky_condition
+\ No newline at end of file
++   Args:
++      city (str): The city name.
++   
++   Returns:
++      str: The weather in the city.
++   
++   Raises:
++      KeyError: If the city is not in the dictionary.
++   """
++
++   city_weather = {
++      "Quito": "sunny",
++      "Sao Paulo": "cloudy",
++      "San Francisco": "rainy",
++      "New York": "rainy"
++   }
++   
++   sky_condition = city_weather[city]
++
++   temperature = get_city_temperature(city)
++
++   return f"{temperature} degrees and {sky_condition}"
+\ No newline at end of file
+diff --git a/part1/question1_test.py b/part1/question1_test.py
+index 6bddae0..56c59a4 100644
+--- a/part1/question1_test.py
++++ b/part1/question1_test.py
+@@ -1,7 +1,16 @@
+ from question1 import get_city_weather
++import pytest
+ 
+ def test_get_city_weather():
+ 
+   assert get_city_weather("Quito") == "22 degrees and sunny"
+ 
+   assert get_city_weather("New York") == "14 degrees and rainy"
++
++  assert get_city_weather("San Francisco") == "16 degrees and rainy"
++
++  assert get_city_weather("Sao Paulo") == "17 degrees and cloudy"
++
++def test_get_city_weather_nonexistent_city():
++    with pytest.raises(KeyError):
++        get_city_weather("Bogota")
+diff --git a/part1/question2.py b/part1/question2.py
+index 34a9b01..918272f 100644
+--- a/part1/question2.py
++++ b/part1/question2.py
+@@ -17,5 +17,33 @@
+ 
+ swapper = None
+ 
+-def run_swapper(list_of_tuples):
+-  return list(map(swapper, list_of_tuples))
+\ No newline at end of file
++def swapper(tuple_item : tuple) -> tuple:
++  """
++  Swaps the items in a tuple.  
++
++  Args:
++    tuple_item (tuple): A tuple of two items.
++
++  Returns:
++    tuple: A tuple of two items. The items are swapped.
++  """
++  #Time Complexity: O(n)
++  #Auxiliary Space: O(n)
++  list_item = list(tuple_item)
++  list_item.reverse()   
++  
++  return tuple(list_item)
++  
++
++def run_swapper(list_of_tuples : list) -> list:
++  """
++  Runs the swapper function on a list of tuples. 
++
++  Args:
++    list_of_tuples (list): A list of tuples.
++
++  Returns:
++    list: A list of tuples. Each tuple has two items.
++  """
++  return list(map(swapper, list_of_tuples))
++
+diff --git a/part1/question3.py b/part1/question3.py
+index 04fab99..3f37084 100644
+--- a/part1/question3.py
++++ b/part1/question3.py
+@@ -25,15 +25,94 @@
+ # The `alchemy_combine()` function will use your oven. You can see the expected 
+ # formulas and their outputs in the test file, `question3_test.py`.
+ 
+-# This function should return an oven instance!
++class Oven:
++  """
++  This class is for a magical oven that can combine ingredients at
++  different temperatures to craft special materials.
++
++  Attributes:
++    ingredients (list): A list of ingredients.
++    temperature (str): The temperature of the oven. Can be "frozen", "boiled", or "waiting".
++  
++  Methods:
++    add(item): Adds an item to the oven.
++    freeze(): Sets the temperature of the oven to "frozen".
++    boil(): Sets the temperature of the oven to "boiled".
++    wait(): Sets the temperature of the oven to "waiting".
++    get_output(): Returns the result material based on ingredients and temperature.
++  """
++  def __init__(self) -> None:
++    self.ingredients = []
++    self.temperature = ""
++
++  def add(self, item) -> None:
++    """
++    Adds an item to the oven.
++
++    Args:
++      item: An item to be added to the oven.
++    """
++    self.ingredients.append(item)
++
++  def freeze(self) -> None:
++    """
++    Sets the temperature of the oven to "frozen".
++    """
++    self.temperature = "frozen"
++    
++  def boil(self) -> None:
++    """
++    Sets the temperature of the oven to "boiled".
++    """
++    self.temperature = "boiled"
++
++  def wait(self) -> None:
++    """
++    Sets the temperature of the oven to "waiting".
++    """
++    self.temperature = "waiting"
++
++  def get_output(self) -> str:
++    """
++    Returns the result material based on ingredients and temperature.
++
++    Returns:
++      str: The result material based on ingredients and temperature.
++    """
++    if self.temperature == "frozen" and "water" in self.ingredients and "air" in self.ingredients:
++        return "snow"
++    elif self.temperature == "boiled" and "lead" in self.ingredients and "mercury" in self.ingredients:
++        return "gold"
++    elif self.temperature == "boiled" and "cheese" in self.ingredients and "dough" in self.ingredients and "tomato" in self.ingredients:
++        return "pizza"
++    else:
++        return "unknown"
++    
++
+ def make_oven():
+-  None
++  """
++  Makes an oven instance.
+ 
+-def alchemy_combine(oven, ingredients, temperature):
++  Returns:
++    Oven: An oven instance.
++  """
++  return Oven()
++    
++def alchemy_combine(oven: Oven , ingredients : list  , temperature : int ) -> str :
++  """
++  Combines ingredients in an oven to make a new material.
++
++  Args:
++    oven (Oven): An oven instance.
++    ingredients (list): A list of ingredients.
++    temperature (int): The temperature of the oven.
+   
++  Returns:
++    str: The name of the new material.
++  """
+   for item in ingredients:
+     oven.add(item)
+-
++    
+   if temperature < 0:
+     oven.freeze()
+   elif temperature >= 100:
+diff --git a/part1/question3_test.py b/part1/question3_test.py
+index 6cb6c89..6414da3 100644
+--- a/part1/question3_test.py
++++ b/part1/question3_test.py
+@@ -1,3 +1,5 @@
++from question3 import alchemy_combine, make_oven
++
+ def test_alchemy_combine():
+ 
+   assert alchemy_combine(
+@@ -16,4 +18,10 @@ def test_alchemy_combine():
+     make_oven(),
+     ["cheese", "dough", "tomato"],
+     150
+-  ) == "pizza"
+\ No newline at end of file
++  ) == "pizza"
++
++  assert alchemy_combine(
++    make_oven(),
++    ["eggs", "onion", "tomato"],
++    120
++  ) == "unknown"
+\ No newline at end of file
+diff --git a/part1/question4.py b/part1/question4.py
+index 1e1b2bf..64c9978 100644
+--- a/part1/question4.py
++++ b/part1/question4.py
+@@ -23,9 +23,9 @@ import pets_db
+ # The output should be a list of tuples in the format: (<pet name>, <species>, <age>)
+ 
+ sql_pets_owned_by_nobody = """
+-
+-Your SQL here.
+-
++    SELECT name, species, age 
++    FROM animals
++    WHERE animal_id NOT IN (SELECT pet_id FROM people_animals);
+ """
+ 
+ # Part 4.B:
+@@ -33,16 +33,21 @@ Your SQL here.
+ # The output should be an integer.
+ 
+ sql_pets_older_than_owner = """
+-
+-Your SQL here.
+-
++    SELECT COUNT(*) 
++    FROM animals
++    JOIN people_animals ON animals.animal_id = people_animals.pet_id
++    JOIN people ON people_animals.owner_id = people.person_id
++    WHERE animals.age > people.age;
+ """
+ 
+ # Part 4.C: BONUS CHALLENGE! 
+ # Write SQL to select the pets that are owned by Bessie and nobody else.
+ # The output should be a list of tuples in the format: (<person name>, <pet name>, <species>)
+ sql_only_owned_by_bessie = """ 
+-
+-Your SQL here.
+-
++    SELECT people.name, animals.name, animals.species 
++    FROM animals
++    JOIN people_animals ON animals.animal_id = people_animals.pet_id
++    JOIN people ON people_animals.owner_id = people.person_id
++    WHERE people.name = "bessie"
++    AND animals.animal_id NOT IN (SELECT pet_id FROM people_animals WHERE owner_id != 2);
+ """
+\ No newline at end of file
+diff --git a/part1/question5.py b/part1/question5.py
+index f76654f..12f7152 100644
+--- a/part1/question5.py
++++ b/part1/question5.py
+@@ -19,9 +19,11 @@
+ # vegetarian integer
+ 
+ sql_create_favorite_foods = """
+-
+-Your SQL here.
+-
++    CREATE TABLE favorite_foods ( 
++        food_id integer,
++        name text not null,
++        vegetarian integer
++    ); 
+ """
+ 
+ # Part 5.B:
+@@ -29,9 +31,8 @@ Your SQL here.
+ # The test suite will verify the new changes by inserting some new rows. 
+ 
+ sql_alter_tables_with_favorite_food = """
+-
+-Your SQL here.
+-
++    ALTER TABLE animals ADD COLUMN favorite_food_id integer;
++    ALTER TABLE people ADD COLUMN favorite_food_id integer;
+ """
+ 
+ # Part 5.C:
+@@ -39,7 +40,8 @@ Your SQL here.
+ # THe output should be a list of tuples in the format: (<pet name>, <food name>)
+ 
+ sql_select_all_vegetarian_pets = """
+-
+-Your SQL here.
+-
++    SELECT animals.name, favorite_foods.name
++    FROM animals
++    JOIN favorite_foods ON animals.favorite_food_id = favorite_foods.food_id
++    WHERE favorite_foods.vegetarian = 1;
+ """
+\ No newline at end of file
+diff --git a/part1/quiz_pets b/part1/quiz_pets
+new file mode 100644
+index 0000000..06a9455
+Binary files /dev/null and b/part1/quiz_pets differ
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/Drink.java b/part2/src/main/java/org/velezreyes/quiz/question6/Drink.java
+index 61c1fdd..3cad73b 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/Drink.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/Drink.java
+@@ -1,7 +1,25 @@
+ package org.velezreyes.quiz.question6;
+ 
++/**
++ * Class representing a drink.
++ * This class represents a beverage with a name and a property to indicate if it's fizzy.
++ * 
++ * @version 1.0.0
++ * @author Camilo Mu├▒oz
++ */
+ public interface Drink {
++  
++  /**
++   * Getter for the name property.
++   * 
++   * @return The name of the drink.
++   */
+   public String getName();
+-
++  
++  /**
++   * Getter for the isFizzy property.
++   * 
++   * @return A boolean indicating if the drink is fizzy.
++   */
+   public boolean isFizzy();
+ }
+\ No newline at end of file
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java b/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java
+new file mode 100644
+index 0000000..bcd2cde
+--- /dev/null
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/DrinkImpl.java
+@@ -0,0 +1,35 @@
++package org.velezreyes.quiz.question6;
++
++/**
++ * Concrete implementation of the Drink interface.
++ * This class represents a beverage with a name and a property to indicate if it's fizzy.
++ * 
++ * @version 1.0.0
++ * @author Camilo Mu├▒oz
++ * @see Drink
++ */
++public class DrinkImpl implements Drink {
++    private String name; 
++    private boolean isFizzy;
++
++    /**
++     * Constructor for the DrinkImpl class.
++     * 
++     * @param name The name of the drink.
++     * @param isFizzy A boolean indicating if the drink is fizzy.
++     */
++    public DrinkImpl(String name, boolean isFizzy) {
++        this.name = name; 
++        this.isFizzy = isFizzy;
++    }
++
++    @Override
++    public String getName() {
++        return name;
++    }
++
++    @Override
++    public boolean isFizzy() {
++        return isFizzy;
++    }
++}
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java b/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
+index 8f3bf9d..8f99988 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/NotEnoughMoneyException.java
+@@ -1,7 +1,16 @@
+ package org.velezreyes.quiz.question6;
+ 
++/**
++ * Exception thrown when the user tries to buy a drink that is not available.
++ * 
++ * @version 1.0.0
++ * @see VendingMachineImpl
++ */
+ public class NotEnoughMoneyException extends Exception {
+ 
++  /**
++   * Constructor for the NotEnoughMoneyException class.
++   */
+   public NotEnoughMoneyException() {
+     super("Not enough money inserted.");
+   }
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/UnknownDrinkException.java b/part2/src/main/java/org/velezreyes/quiz/question6/UnknownDrinkException.java
+index 3c26b1e..1c3c029 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/UnknownDrinkException.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/UnknownDrinkException.java
+@@ -1,8 +1,17 @@
+ package org.velezreyes.quiz.question6;
+ 
++/**
++ * Exception thrown when the user tries to buy a drink that is not available.
++ * 
++ * @version 1.0.0
++ * @see VendingMachineImpl
++ */
+ public class UnknownDrinkException extends Exception {
+ 
+-  public UnknownDrinkException() {
+-    super("Unknown drink!");
++  /**
++   * Constructor for the NotEnoughMoneyException class.
++   */
++  public UnknownDrinkException(String name) {
++    super("Unknown drink: " + name);
+   }
+ }
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachine.java b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachine.java
+index 3f92825..8c0f808 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachine.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachine.java
+@@ -1,8 +1,25 @@
+ package org.velezreyes.quiz.question6;
+ 
++/**
++ * Interface representing a vending machine.
++ * This interface represents a vending machine that sells drinks.
++ * 
++ * @version 1.0.0
++ * @author Camilo Mu├▒oz
++ */
+ public interface VendingMachine {
+ 
++  /**
++   * Inserts a quarter into the vending machine.
++   * 
++   */
+   public void insertQuarter();
+ 
++  /**
++   * Chooses a drink from the vending machine.
++   * @param name The name of the drink.
++   * @throws NotEnoughMoneyException 
++   * @throws UnknownDrinkException 
++   */
+   public Drink pressButton(String name) throws NotEnoughMoneyException, UnknownDrinkException;
+ }
+\ No newline at end of file
+diff --git a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
+index 85742c4..e1ecd41 100644
+--- a/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
++++ b/part2/src/main/java/org/velezreyes/quiz/question6/VendingMachineImpl.java
+@@ -1,9 +1,77 @@
+ package org.velezreyes.quiz.question6;
+ 
+-public class VendingMachineImpl {
++//Libraries
++import java.util.HashMap;
++import java.util.Map;
+ 
++/**
++ * Concrete implementation of the VendingMachine interface.
++ * This class represents a vending machine that sells drinks.
++ * 
++ * @version 1.0.0
++ * @author Camilo Mu├▒oz
++ * @see VendingMachine
++ * @see Drink
++ * @see NotEnoughMoneyException
++ * @see UnknownDrinkException
++ * @see DrinkImpl
++ * @see VendingMachineImpl
++ * @see DrinkTest
++ */
++public class VendingMachineImpl implements VendingMachine {
++  private Map<String, Integer> drinkPrices;
++  private int totalMoney;
++
++  /**
++   * Constructor for the VendingMachineImpl class.
++   */
++  private VendingMachineImpl() {
++    drinkPrices = new HashMap<>();
++    drinkPrices.put("ScottCola", 75);
++    drinkPrices.put("KarenTea", 100);
++  }
++
++  /**
++   * Getter for the instance property.
++   * 
++   * @return The instance of the VendingMachineImpl class.
++   */
+   public static VendingMachine getInstance() {
+-    // Fix me!
+-    return null;
++    return new VendingMachineImpl();
++  }
++
++  @Override
++  public void insertQuarter() {
++    totalMoney += 25;
++  }
++
++  @Override
++  public Drink pressButton(String name) throws NotEnoughMoneyException, UnknownDrinkException {
++    if (!drinkPrices.containsKey(name)) {
++      throw new UnknownDrinkException(name);
++    }
++
++
++    int price = drinkPrices.get(name);
++    
++    if (totalMoney < price) {
++      throw new NotEnoughMoneyException();
++    }
++
++    totalMoney -= price;
++
++    return createDrink(name);
++  }
++
++  /**
++   * Creates a Drink object.
++   * 
++   * @param name The name of the drink.
++   * @return A Drink object.
++   */
++  private Drink createDrink(String name) {
++    boolean isFizzy = name.equals("ScottCola");
++    return new DrinkImpl(name, isFizzy);
+   }
++  
+ }
+diff --git a/part2/src/test/java/org/velezreyes/quiz/Question6Test.java b/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
+index 855e73f..1bfec35 100644
+--- a/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
++++ b/part2/src/test/java/org/velezreyes/quiz/Question6Test.java
+@@ -28,6 +28,7 @@ public class Question6Test {
+     Exception exception = assertThrows(NotEnoughMoneyException.class, () -> {
+       vm.pressButton("ScottCola");
+     });
++    
+   }
+ 
+   @Test
+diff --git a/part3/security_question.md b/part3/security_question.md
+new file mode 100644
+index 0000000..e068a06
+--- /dev/null
++++ b/part3/security_question.md
+@@ -0,0 +1,22 @@
++## Solution: System Security
++
++1. **Employee Education**:
++   - Start by educating our employees in good security practices to cultivate a strong security culture within the company.
++
++2. **Infrastructure Security** (Aligned with OWASP Top 10):
++   - **Broken Access Control**: Ensure proper configuration and enforcement of access control policies, allowing employees access only to the resources necessary for their roles. Regularly audit access controls.
++   - **Cryptographic Failures**: Review and ensure the quality and up-to-date use of encryption algorithms to prevent vulnerabilities arising from insecure communication protocols.
++   - **Injection Attacks**: Detect and prevent injection vulnerabilities, including SQL and NoSQL injections. Implement input validation and prepared statements to mitigate risks.
++   - **Insecure Design**: Identify and rectify design flaws that could lead to vulnerabilities. Utilize threat modeling, secure design patterns, and principles to enhance security.
++   - **Security Misconfiguration**: Strengthen system security through a hardening process and segment components to isolate vulnerabilities. Apply multi-layered security policies.
++   - **Vulnerable and Outdated Components**: Focus on component security, keep components updated, and consider DevSecOps practices for continuous monitoring and security.
++   - **Identification and Authentication Failures**: Securely manage authentication mechanisms, consider multi-factor authentication, and validate user roles for resource access.
++   - **Software and Data Integrity Failures**: Verify software and data integrity by implementing checks and procedures for software updates and critical data.
++   - **Security Logging and Monitoring Failures**: Expand logging and monitoring capabilities to detect various failure types. Ensure data backup and availability.
++   - **Server-Side Request Forgery (SSRF)**: Perform targeted testing to identify and mitigate potential SSRF vulnerabilities. Implement network and application-level defense controls.
++
++## References:
++
++- [Tarlogic Security - OWASP Top 10](https://www.tarlogic.com/es/blog/owasp-top-10-vulnerabilidades-web/)
++- [OWASP Top Ten](https://owasp.org/www-project-top-ten/)
++- [Synopsys - What is the OWASP Top 10](https://www.synopsys.com/glossary/what-is-owasp-top-10.html)

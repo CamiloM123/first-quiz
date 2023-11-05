@@ -13,23 +13,54 @@
 # need to be fixed. The test suite in `question1_test.py` will verify the output.
 # Read the test suite to know the values that these functions should return.
 
-def get_city_temperature(city):
-   if city == "Quito":
-      return 22
-   if city == "Sao Paulo":
-      return 17
-   if city == "San Francisco":
-      return 16
+def get_city_temperature(city : str ) -> int :
+   """
+   Returns the temperature for a given city.
 
-def get_city_weather(city):
+   Args: 
+      city (str): The city name.
+      
+   Returns:
+      int: The temperature in degrees Celsius.
+   
+   Raises:
+      KeyError: If the city is not in the dictionary.
+   """
 
-  sky_condition = None
+   city_temperatures = {
+      "Quito": 22,
+      "Sao Paulo": 17,
+      "San Francisco": 16,
+      "New York": 14
+   }
 
-  if city == "Sao Paulo":
-     sky_condition = "cloudy"
-  elif city == "New York":
-     sky_condition = "rainy"
+   temperature = city_temperatures[city]
+   
+   return temperature
 
-  temperature = get_city_temperature(city)
+def get_city_weather(city : str ) -> str :
+   """
+   Returns the weather for a given city.
 
-  return str(temperature) + " degrees and " + sky_condition
+   Args:
+      city (str): The city name.
+   
+   Returns:
+      str: The weather in the city.
+   
+   Raises:
+      KeyError: If the city is not in the dictionary.
+   """
+
+   city_weather = {
+      "Quito": "sunny",
+      "Sao Paulo": "cloudy",
+      "San Francisco": "rainy",
+      "New York": "rainy"
+   }
+   
+   sky_condition = city_weather[city]
+
+   temperature = get_city_temperature(city)
+
+   return f"{temperature} degrees and {sky_condition}"
